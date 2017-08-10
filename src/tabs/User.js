@@ -5,17 +5,17 @@ import {
   Text,
   View
 } from 'react-native';
-import HeaderButton from '../components/HeaderButton';
+import HeaderProfile from '../components/HeaderButton';
 
-export default class Home extends Component {
+export default class User extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <HeaderButton onPress={() => navigate('DrawerOpen')} />
+        <HeaderProfile />
         <Text style={styles.header}>
-           Hi {this.props.screenProps.firstName} !
+          User Profile
         </Text>
         <Button
           onPress={() => navigate('Settings')}

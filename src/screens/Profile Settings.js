@@ -7,23 +7,22 @@ import {
 } from 'react-native';
 import HeaderButton from '../components/HeaderButton';
 
-export default class Home extends Component {
+export default class Modal extends Component {
 
   render() {
-    const { navigate } = this.props.navigation;
+    const { goBack } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <HeaderButton onPress={() => navigate('DrawerOpen')} />
+        <HeaderButton
+          icon="md-close"
+          onPress={() => goBack()}
+        />
         <Text style={styles.header}>
-           Hi {this.props.screenProps.firstName} !
+          Hi, I'm a modal!
         </Text>
         <Button
-          onPress={() => navigate('Settings')}
-          title="Open Settings Tab"
-        />
-        <Button
-          onPress={() => navigate('Modal')}
-          title="Open Modal"
+          onPress={() => goBack()}
+          title="Close Me"
         />
       </View>
     );

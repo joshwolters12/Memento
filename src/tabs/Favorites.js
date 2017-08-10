@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import HeaderButton from '../components/HeaderButton';
 
-export default class Home extends Component {
+export default class Favorites extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
@@ -15,7 +15,7 @@ export default class Home extends Component {
       <View style={styles.container}>
         <HeaderButton onPress={() => navigate('DrawerOpen')} />
         <Text style={styles.header}>
-           Hi {this.props.screenProps.firstName} !
+          Favorites
         </Text>
         <Button
           onPress={() => navigate('Settings')}

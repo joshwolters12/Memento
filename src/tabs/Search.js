@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import HeaderButton from '../components/HeaderButton';
 
-export default class Settings extends Component {
+export default class Search extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
@@ -15,11 +15,11 @@ export default class Settings extends Component {
       <View style={styles.container}>
         <HeaderButton onPress={() => navigate('DrawerOpen')} />
         <Text style={styles.header}>
-          Settings Tab
+          Search
         </Text>
         <Button
-          onPress={() => navigate('Profile', { user: 'Tom' })}
-          title="Open Profile"
+          onPress={() => navigate('Settings')}
+          title="Open Settings Tab"
         />
         <Button
           onPress={() => navigate('Modal')}
