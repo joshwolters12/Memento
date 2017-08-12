@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import {
-  DrawerNavigator,
-  StackNavigator,
-  TabNavigator
-} from 'react-navigation';
+import { AsyncStorage, Text } from 'react-native';
+import { DrawerNavigator,StackNavigator,TabNavigator} from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 import Home from './src/tabs/Home';
 import Collect from './src/tabs/Collect';
@@ -13,16 +10,8 @@ import User from './src/tabs/User';
 import Profile from './src/screens/Profile';
 import Modal from './src/screens/Modal';
 import Drawer from './src/components/Drawer';
+import Login from './src/screens/Login';
 
-const mapNavigationStateParamsToProps = (SomeComponent) => {
-  return class extends Component {
-    static navigationOptions = SomeComponent.navigationOptions; // better use hoist-non-react-statics
-    render() {
-      const { navigation: { state: { params } } } = this.props
-      return <SomeComponent {...params} {...this.props} />
-    }
-  }
-}
 
 // Stack navigation for Collect and Profile screens
 const CollectTab = StackNavigator({
@@ -49,7 +38,7 @@ const CollectTab = StackNavigator({
 // Tab navigation for Home and Collect screens
 const TabNavigation = TabNavigator({
   Home: {
-    screen: mapNavigationStateParamsToProps(Home),
+    screen: Home,
     navigationOptions: {
       tabBarLabel: 'Homeyyy',
       tabBarIcon: ({ tintColor, focused }) => <Ionicons
@@ -137,12 +126,30 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: undefined,
-      data: {}
-    }
+      username: 'Suman',
+      password: 'iscool', //will be check on backend, placeholder for now
+      data: {},
+      currScreen: 'home',
+      loginInfo: { username: undefined, password: undefined },
+      errorMessage: ""
+    };
   }
 
   componentWillMount() {
+    let login = new Promise((res, rej) => {
+      res(AsyncStorage.getItem('@Sherpa:username'))
+    })
+      .then((result) => {
+        if (result !== null) {
+          this.setState({ username: result }, () => console.log(result, 'logged in'))
+        } else {
+          this.state.currScreen = 'login'
+        }
+      })
+      .catch((rejected) => {
+        this.setState({ currScreen: 'login' })
+        console.log('Error. Try relogging in with username + password')
+      })
     // call navigate for AppNavigator here:
     this.navigator && this.navigator.dispatch({ type: 'Navigate', routeName, params });
   }
@@ -151,17 +158,52 @@ export default class App extends React.Component {
     fetch('http://trophyservice-env.us-east-1.elasticbeanstalk.com/trophy-service/user/5987c47e59265da9120d1d1b')
       .then((res) => res.json())
       .then((resJson) => {
-        console.log(resJson)
+        console.log('received login data:', resJson)
         this.setState({ data: resJson })
       })
       .catch((error) => {
-        console.error(error);
+        console.error('error in receiving logged data:', error);
       });
   }
 
+
+  changeUsernameField(e) {
+      let newState = Object.assign({},this.state)
+      newState.loginInfo.username = e
+      this.setState(newState)
+  }
+
+  changePasswordField(e) {
+      let newState = Object.assign({},this.state)
+      newState.loginInfo.password = e
+      this.setState(newState)
+  }
+
+  verifyLogin(){
+    console.log(this.state.loginInfo)
+    console.log(this.state.username, this.state.password)
+    if(this.state.username === this.state.loginInfo.username && this.state.password === this.state.loginInfo.password){
+      this.setState({currScreen: 'home'})
+    } else {
+      this.setState({errorMessage: 'Incorrect login and/or password. Please try again'})
+    }
+  }
+
   render() {
-    return (
-      <AppNavigator screenProps={this.state.data} ref={nav => { this.navigator = nav; }} />
-    );
+    if (this.state.currScreen === 'login') {
+      return (
+        <Login
+          loginInfo={this.state.loginInfo}
+          checkUsername={this.changeUsernameField.bind(this)}
+          checkPassword={this.changePasswordField.bind(this)}
+          verifyLogin={this.verifyLogin.bind(this)}
+          errorMessage={this.state.errorMessage}
+        />
+      )
+    } else {
+      return (
+        <AppNavigator screenProps={this.state.data} ref={nav => { this.navigator = nav; }} />
+      )
+    }
   }
 }

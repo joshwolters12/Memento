@@ -9,7 +9,6 @@ import { Ionicons } from '@expo/vector-icons';
 export default class ProfileHeader extends Component {
 
   static propTypes = {
-    onPress: PropTypes.func.isRequired,
     icon: PropTypes.string.isRequired,
   };
 
