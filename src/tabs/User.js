@@ -5,15 +5,17 @@ import {
   Text,
   View
 } from 'react-native';
-import HeaderProfile from '../components/HeaderButton';
+import ProfileHeader from '../components/ProfileHeader';
 
 export default class User extends Component {
-
   render() {
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <HeaderProfile />
+        <ProfileHeader 
+          data={this.props.screenProps}
+          navigation = {this.props.navigation}
+        />
         <Text style={styles.header}>
           User Profile
         </Text>

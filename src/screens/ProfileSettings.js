@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import HeaderButton from '../components/HeaderButton';
 
-export default class Modal extends Component {
+export default class ProfileSettings extends Component {
 
   render() {
     const { goBack } = this.props.navigation;
@@ -18,7 +18,7 @@ export default class Modal extends Component {
           onPress={() => goBack()}
         />
         <Text style={styles.header}>
-          Hi, I'm a modal!
+          Profile Settings
         </Text>
         <Button
           onPress={() => goBack()}

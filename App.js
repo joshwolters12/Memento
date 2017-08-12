@@ -7,9 +7,8 @@ import Collect from './src/tabs/Collect';
 import Search from './src/tabs/Search';
 import Favorites from './src/tabs/Favorites';
 import User from './src/tabs/User';
-import Profile from './src/screens/Profile';
+import ProfileSettings from './src/screens/ProfileSettings';
 import Modal from './src/screens/Modal';
-import Drawer from './src/components/Drawer';
 import Login from './src/screens/Login';
 
 
@@ -22,12 +21,11 @@ const CollectTab = StackNavigator({
       headerBackTitle: 'Back!!!!!',    // Title back button Back when we navigate to Profile from Collect
     },
   },
-  Profile: {
-    screen: Profile,
+  ProfileSettings: {
+    screen: ProfileSettings,
     navigationOptions: ({ navigation }) => ({
       // Customize header's title with user name passed to navigate()
       // You can pass any props you'd like. For instance: navigate('Profile', { user: 'Tom' }
-      title: `${navigation.state.params.user}'s Profile`,
     }),
   },
 },
@@ -95,21 +93,12 @@ const TabNavigation = TabNavigator({
 
 });
 
-// Wrap tab navigation into drawer navigation
-const TabsWithDrawerNavigation = DrawerNavigator({
-  Tabs: {
-    screen: TabNavigation,
-  }
-}, {
-    // Register custom drawer component
-    contentComponent: props => <Drawer {...props} />
-  });
 
 // And lastly stack together drawer with tabs and modal navigation
 // because we want to be able to call Modal screen from any other screen
 const AppNavigator = StackNavigator({
-  TabsWithDrawer: {
-    screen: TabsWithDrawerNavigation,
+  Tabs: {
+    screen: TabNavigation,
   },
   Modal: {
     screen: Modal
@@ -126,12 +115,15 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: 'Suman',
-      password: 'iscool', //will be check on backend, placeholder for now
-      data: {},
+      username: undefined,
+      password: undefined, //will be check on backend, placeholder for now
+      user: {},
       currScreen: 'home',
       loginInfo: { username: undefined, password: undefined },
-      errorMessage: ""
+      errorMessage: "",
+      profile:{
+        currView: 'Showcase'
+      }
     };
   }
 
@@ -159,7 +151,7 @@ export default class App extends React.Component {
       .then((res) => res.json())
       .then((resJson) => {
         console.log('received login data:', resJson)
-        this.setState({ data: resJson })
+        this.setState({ user: resJson })
       })
       .catch((error) => {
         console.error('error in receiving logged data:', error);
@@ -180,8 +172,6 @@ export default class App extends React.Component {
   }
 
   verifyLogin(){
-    console.log(this.state.loginInfo)
-    console.log(this.state.username, this.state.password)
     if(this.state.username === this.state.loginInfo.username && this.state.password === this.state.loginInfo.password){
       this.setState({currScreen: 'home'})
     } else {
@@ -202,7 +192,7 @@ export default class App extends React.Component {
       )
     } else {
       return (
-        <AppNavigator screenProps={this.state.data} ref={nav => { this.navigator = nav; }} />
+        <AppNavigator screenProps={this.state} ref={nav => { this.navigator = nav; }} />
       )
     }
   }

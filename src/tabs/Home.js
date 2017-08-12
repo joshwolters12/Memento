@@ -8,14 +8,13 @@ import {
 import HeaderButton from '../components/HeaderButton';
 
 export default class Home extends Component {
-
   render() {
+    console.log(this.props.screenProps)
     const { navigate } = this.props.navigation;
     return (
       <View style={styles.container}>
-        <HeaderButton onPress={() => navigate('DrawerOpen')} />
         <Text style={styles.header}>
-           Hi {this.props.screenProps.firstName} !
+           Hi {this.props.screenProps.user.firstName} !
         </Text>
         <Button
           onPress={() => navigate('Settings')}
