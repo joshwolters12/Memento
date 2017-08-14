@@ -128,20 +128,22 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
+    //get person's login information
     let login = new Promise((res, rej) => {
       res(AsyncStorage.getItem('@Sherpa:username'))
     })
       .then((result) => {
         if (result !== null) {
-          this.setState({ username: result }, () => console.log(result, 'logged in'))
+          this.setState({ username: result }, () => console.log(result, 'logged in'));
         } else {
-          this.state.currScreen = 'login'
+          this.state.currScreen = 'login';
         }
       })
       .catch((rejected) => {
-        this.setState({ currScreen: 'login' })
-        console.log('Error. Try relogging in with username + password')
+        this.setState({ currScreen: 'login' });
+        console.log('Error. Try relogging in with username + password');
       })
+
     // call navigate for AppNavigator here:
     this.navigator && this.navigator.dispatch({ type: 'Navigate', routeName, params });
   }
@@ -150,8 +152,8 @@ export default class App extends React.Component {
     fetch('http://trophyservice-env.us-east-1.elasticbeanstalk.com/trophy-service/user/5987c47e59265da9120d1d1b')
       .then((res) => res.json())
       .then((resJson) => {
-        console.log('received login data:', resJson)
-        this.setState({ user: resJson })
+        console.log('received login data:', resJson);
+        this.setState({ user: resJson });
       })
       .catch((error) => {
         console.error('error in receiving logged data:', error);
@@ -160,22 +162,22 @@ export default class App extends React.Component {
 
 
   changeUsernameField(e) {
-      let newState = Object.assign({},this.state)
-      newState.loginInfo.username = e
-      this.setState(newState)
+      let newState = Object.assign({},this.state);
+      newState.loginInfo.username = e;
+      this.setState(newState);
   }
 
   changePasswordField(e) {
-      let newState = Object.assign({},this.state)
-      newState.loginInfo.password = e
-      this.setState(newState)
+      let newState = Object.assign({},this.state);
+      newState.loginInfo.password = e;
+      this.setState(newState);
   }
 
   verifyLogin(){
     if(this.state.username === this.state.loginInfo.username && this.state.password === this.state.loginInfo.password){
-      this.setState({currScreen: 'home'})
+      this.setState({currScreen: 'home'});
     } else {
-      this.setState({errorMessage: 'Incorrect login and/or password. Please try again'})
+      this.setState({errorMessage: 'Incorrect login and/or password. Please try again'});
     }
   }
 
